@@ -3,6 +3,8 @@ import pymongo
 import bcrypt
 import re
 from pymongo import MongoClient
+import random 
+
 
 USAR_BANCO = False  
 
@@ -30,8 +32,8 @@ def autenticar(usuario, senha):
             return True
     else:
         usuarios_validos = {
-            'admin': '$2b$12$PLqgdOrS92uHJDtKrGs8Z.it6MlFFmsM0asaTfGQvA7DHAM/r2nHG',  
-            'jogador': '$2b$12$PLqgdOrS92uHJDtKrGs8Z.it6MlFFmsM0asaTfGQvA7DHAM/r2nHG',
+            'admin': '$2b$12$0KAriYRof2by7h1.0mlkeeMTUliZcKv6L05houe4JE8JSIkw5Khii',  
+            'jogador': '$2b$12$0KAriYRof2by7h1.0mlkeeMTUliZcKv6L05houe4JE8JSIkw5Khii',
         }
         
         if usuario in usuarios_validos and verificar_senha(senha, usuarios_validos[usuario]):
@@ -103,13 +105,32 @@ def tela_registro():
 def main():
     st.sidebar.title("Opções")
     escolha = st.sidebar.radio("Escolha uma opção", ("Login", "Registrar"))
-    
+
+    if 'autenticado' not in st.session_state:
+        st.session_state['autenticado'] = False
+
     if escolha == "Login":
-        if tela_login():
+        if not st.session_state['autenticado']:
+            if tela_login():
+                st.session_state['autenticado'] = True
+                st.rerun()
+
+        if st.session_state['autenticado']:
             st.title('Área Protegida')
-            st.write('Aqui está a área restrita do seu aplicativo!')
+
+            from dadosPersonagem import gerar_valores_aleatorios
+
+            NomePersonagem = st.text_input('Nome do Personagem', key='NomePersonagem')
+            if NomePersonagem:
+                Classe = st.selectbox('None', ['None','Guerreiro', 'Mago', 'Ferreiro', 'Arqueiro'], key='ClassePersonagem')
+                if Classe != 'None':
+                    Atributos = gerar_valores_aleatorios(NomePersonagem)
+                    st.write(f"Classe: {Classe}")
+                    st.write(Atributos)
+
     elif escolha == "Registrar":
         tela_registro()
+
 
 if __name__ == "__main__":
     main()
