@@ -1,0 +1,41 @@
+# ExibirPersonagemCriado.py
+
+import streamlit as st
+
+def exibir_personagem_criado():
+    atributos_salvos = st.session_state.get('Atributos')
+
+    if not atributos_salvos:
+        st.warning("Nenhum personagem criado ainda.")
+        return
+
+    st.header(f"Seu Personagem: {atributos_salvos['Nome']}")
+
+    linha1_col1, linha1_col2, linha1_col3 = st.columns(3)
+    with linha1_col1:
+        st.metric("Raca", atributos_salvos["Raca"])
+    with linha1_col2:
+        st.metric("Classe", atributos_salvos["Classe"])
+    with linha1_col3:
+        st.empty()
+
+    linha2_col1, linha2_col2, linha2_col3 = st.columns(3)
+    with linha2_col1:
+        st.metric("Ataque", atributos_salvos["Atk"])
+    with linha2_col2:
+        st.metric("Destreza", atributos_salvos["Des"])
+    with linha2_col3:
+        st.metric("Constituicao", atributos_salvos["Const"])
+
+    linha3_col1, linha3_col2, linha3_col3 = st.columns(3)
+    with linha3_col1:
+        st.metric("Carisma", atributos_salvos["Car"])
+    with linha3_col2:
+        st.metric("Inteligencia", atributos_salvos["Int"])
+    with linha3_col3:
+        st.metric("Sabedoria", atributos_salvos["Sab"])
+    
+
+    if st.button("Reiniciar Criacao de Personagem"):
+        st.session_state['Atributos'] = None
+        st.rerun()
