@@ -1,4 +1,3 @@
-# -*- coding: iso-8859-1 -*-
 import streamlit as st
 import pymongo
 import bcrypt
@@ -152,6 +151,7 @@ def main():
                             Atributos = gerar_valores_aleatorios(NomePersonagem, Classe, Raca)
                             if Atributos != None: 
                                 if (st.button("Salvar")):
+                                    Atributos['Inventario'] = []
                                     st.session_state['Atributos'] = Atributos
                                     st.write(Atributos)
                                     print("Atributos front ")

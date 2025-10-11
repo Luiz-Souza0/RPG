@@ -1,6 +1,8 @@
 # ExibirPersonagemCriado.py
 
 import streamlit as st
+from Inventario import exibir_inventario
+from Habilidades import exibir_Habilidades
 
 def exibir_personagem_criado():
     atributos_salvos = st.session_state.get('Atributos')
@@ -35,6 +37,10 @@ def exibir_personagem_criado():
     with linha3_col3:
         st.metric("Sabedoria", atributos_salvos["Sab"])
     
+    st.divider()  # linha separadora
+    exibir_inventario()
+    st.divider()  # linha separadora
+    exibir_Habilidades()
 
     if st.button("Reiniciar Criacao de Personagem"):
         st.session_state['Atributos'] = None
