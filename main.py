@@ -118,14 +118,17 @@ def main():
         escolha = st.sidebar.radio("Escolha uma opção", ("Login", "Registrar"))
     else:
         st.sidebar.write(f"Logado como: {st.session_state['usuario']}")
+        tipo =  st.sidebar.radio("O que deseja ver?", ("Monstros","Ficha"))
         if st.sidebar.button("Sair"):
             st.session_state['autenticado'] = False
             st.session_state['Atributos'] = None
             st.session_state['usuario'] = None
             st.rerun()
         escolha = "Área Protegida"
-
-    if escolha == "Login":
+    if tipo == Monstros:
+        from TelaMonstros import Monstros
+        Monstros()
+    elif escolha == "Login":
         if not st.session_state['autenticado'] or st.session_state['autenticado'] == False:
             if tela_login():
                 st.session_state['autenticado'] = True
