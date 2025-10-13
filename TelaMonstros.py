@@ -1,6 +1,6 @@
 import streamlit as st
 
-def Monstros:
+def Monstros():
   st.write("Monstros")
-  return "aaa"
+  
 
