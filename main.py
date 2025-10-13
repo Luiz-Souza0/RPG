@@ -116,6 +116,7 @@ def main():
     
     if st.session_state['autenticado'] == False:
         escolha = st.sidebar.radio("Escolha uma opção", ("Login", "Registrar"))
+        tipo = ""
     else:
         st.sidebar.write(f"Logado como: {st.session_state['usuario']}")
         tipo =  st.sidebar.radio("O que deseja ver?", ("Monstros","Ficha"))
