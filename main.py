@@ -125,7 +125,7 @@ def main():
             st.session_state['usuario'] = None
             st.rerun()
         escolha = "Área Protegida"
-    if tipo == Monstros:
+    if tipo == "Monstros":
         from TelaMonstros import Monstros
         Monstros()
     elif escolha == "Login":
