@@ -1,4 +1,5 @@
 import streamlit as st
 
-st.write("Monstros")
+def Monstros:
+  st.write("Monstros")
 
