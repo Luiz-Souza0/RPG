@@ -71,6 +71,12 @@ def Monstros():
 
     if not monstros_filtrados:
         st.warning("Nenhum monstro encontrado com os filtros selecionados.")
+        st.info("Tente ajustar os filtros na barra lateral.")
+        st.divider()
+        st.success("Ou digite o numero da página do monstro desejado:")
+        pagina_input = st.number_input("Número da Página", min_value=1,max_value=352, step=1)
+        if pagina_input > 0:
+            mostrar_pagina_escolhida_pdf(pagina_input, f"Página {pagina_input}")
     else:
         for monstro in monstros_filtrados:
             with st.expander(monstro["nome"]):
@@ -78,3 +84,25 @@ def Monstros():
                 # st.markdown(f"**Ambientação:** {', '.join(monstro['ambientacao'])}")
                 # st.markdown(f"**Dificuldade:** {monstro['dificuldade']}")
                 mostrar_pagina_pdf(monstro["pagina"], monstro["nome"])
+
+def mostrar_pagina_escolhida_pdf(pagina, nome_monstro, zoom=1.0):
+    try:
+        caminho_pdf = "Pdfs/manual_dos_monstros.pdf"
+        doc = fitz.open(caminho_pdf)
+
+        if pagina < 1 or pagina > len(doc):
+            st.error("Página fora do intervalo.")
+            return
+        else: 
+            st.progress(pagina / len(doc))
+
+        page = doc.load_page(pagina - 1)
+
+        # Aplica zoom com uma matriz de transformação
+        matrix = fitz.Matrix(zoom, zoom)
+        pix = page.get_pixmap(matrix=matrix)
+
+        img_bytes = pix.tobytes("png")
+        st.image(img_bytes, caption=f"{nome_monstro} - Página {pagina}", use_column_width=False)
+    except Exception as e:
+        st.error(f"Erro ao abrir o PDF: {e}")
