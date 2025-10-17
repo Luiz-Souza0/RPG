@@ -60,7 +60,9 @@ def Classes(Atributos):
     if(Atributos["Classe"] == "Orc"):
         Atributos["Atk"] += 2
         Atributos["Const"] += 1
-        
+
+    Nivel = 1
+    Atributos.update({"Nivel": Nivel })        
     print("Atributos")
     print(Atributos)
     return Atributos
