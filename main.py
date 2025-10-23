@@ -83,7 +83,7 @@ def tela_login():
 def tela_registro():
     st.title('Registro de UsuÃ¡rio')
     
-    novo_usuario = st.text_input('Nome de usuÃ¡rio')
+    novo_usuario = st.text_input('Nome de usuario')
     nova_senha = st.text_input('Senha', type='password')
     confirmar_senha = st.text_input('Confirmar Senha', type='password')
     
@@ -97,7 +97,7 @@ def tela_registro():
                     else:
                         criar_usuario(novo_usuario, nova_senha)
                 else:
-                    st.error("As senhas nÃ£o coincidem!")
+                    st.error("As senhas não coincidem!")
             else:
                 st.error(mensagem)
         else:
@@ -119,7 +119,7 @@ def main():
         tipo = ""
     else:
         st.sidebar.write(f"Logado como: {st.session_state['usuario']}")
-        tipo =  st.sidebar.radio("O que deseja ver?", ("Monstros","Ficha"))
+        tipo =  st.sidebar.radio("O que deseja ver?", ("Monstros","Ficha", "Sala do Mestre"))
         if st.sidebar.button("Sair"):
             st.session_state['autenticado'] = False
             st.session_state['Atributos'] = None
@@ -129,6 +129,9 @@ def main():
     if tipo == "Monstros":
         from TelaMonstros import Monstros
         Monstros()
+    elif tipo == "Sala do Mestre":
+        from Master import seeAllPlayers
+        seeAllPlayers()
     elif escolha == "Login":
         if not st.session_state['autenticado'] or st.session_state['autenticado'] == False:
             if tela_login():
