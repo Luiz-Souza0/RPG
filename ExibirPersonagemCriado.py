@@ -16,10 +16,12 @@ def exibir_personagem_criado():
     linha1_col1, linha1_col2, linha1_col3 = st.columns(3)
     with linha1_col1:
         st.metric("Raca", atributos_salvos["Raca"])
+        st.button("")
     with linha1_col2:
         st.metric("Classe", atributos_salvos["Classe"])
     with linha1_col3:
-        st.empty()
+        st.metric("Nivel", atributos_salvos["Nivel"])
+        # st.empty()
 
     linha2_col1, linha2_col2, linha2_col3 = st.columns(3)
     with linha2_col1:
