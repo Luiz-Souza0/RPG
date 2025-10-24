@@ -86,8 +86,8 @@ def main():
                                     print("Atributos front ")
                                     print(Atributos)
                                     Atributos.update({"Player":st.session_state['usuario']})
-                                    insert_register(Atributos, "personagem")
-                                    st.rerun()
+                                    if insert_register(Atributos, "personagem"):
+                                        st.rerun()
             else :
                 from ExibirPersonagemCriado import exibir_personagem_criado
                 exibir_personagem_criado()
