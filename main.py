@@ -87,7 +87,7 @@ def main():
                                     st.write(Atributos)
                                     print("Atributos front ")
                                     print(Atributos)
-                                    personagem = select_register("usuarios", False, columns=["id"])
+                                    personagem = select_register("usuarios", None, columns=["id"])
                                     Atributos.update({"Player":personagem})
                                     if insert_register(Atributos, "personagens"):
                                         st.rerun()
