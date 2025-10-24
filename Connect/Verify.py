@@ -166,16 +166,17 @@ def alter_register(regid: int, updates: dict, table: str):
         st.error(f"Erro ao atualizar registro: {e}")
         return None
 
-def select_register(table: str, columns="*"):
+def select_register(table: str, filter: dict = None, columns="*"):
     """
-    Seleciona um registro existente no Supabase pelo ID.
+    Seleciona registros do Supabase aplicando filtros dinâmicos.
 
     Args:
         table (str): Nome da tabela.
-        columns (list ou str): Lista de campos ou "*" para todos.
+        filter (dict, opcional): Dicionário com filtros. Chaves com valor False ou None são ignoradas.
+        columns (list ou str, opcional): Lista de campos ou "*" para todos.
     
     Returns:
-        dict ou None: Retorna o registro encontrado ou None se não existir.
+        list ou None: Lista de registros encontrados ou None se não existir.
     """
     try:
         if not USAR_BANCO:
@@ -186,11 +187,19 @@ def select_register(table: str, columns="*"):
         if isinstance(columns, list):
             columns = ",".join(columns)
 
-        response = supabase.table(table).select(columns).execute()
-        
+        query = supabase.table(table).select(columns)
+
+        # Aplica filtros apenas se não forem False/None
+        if filter:
+            for key, value in filter.items():
+                if value is not False and value is not None:
+                    query = query.eq(key, value)
+
+        response = query.execute()
+
         if response.data:
-            st.success(f"Registro selecionado com sucesso na tabela '{table}'.")
-            return response.data[0]  # retorna apenas o dicionário do registro
+            st.success(f"{len(response.data)} registro(s) selecionado(s) na tabela '{table}'.")
+            return response.data  # retorna lista de dicionários
         else:
             st.warning(f"Nenhum registro encontrado na tabela '{table}'.")
             return None
