@@ -6,8 +6,8 @@ import re
 # ==============================================
 # CONFIGURAÇÃO DO SUPABASE
 # ==============================================
-SUPABASE_URL = "https://<SEU_PROJETO>.supabase.co"
-SUPABASE_KEY = "<SUA_CHAVE_ANON>"
+SUPABASE_URL = "https://rybuyxuxivizlfpxesoe.supabase.co"
+SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ5YnV5eHV4aXZpemxmcHhlc29lIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEzMjc0OTAsImV4cCI6MjA3NjkwMzQ5MH0.dYsT3jwJ7xvKNBAOGmRzxibAGzz776amwgfm-m4TSPA"
 USAR_BANCO = True  # ativar Supabase
 
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY) if USAR_BANCO else None
