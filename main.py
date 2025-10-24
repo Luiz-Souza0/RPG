@@ -4,7 +4,7 @@ import bcrypt
 import re
 from pymongo import MongoClient
 import random 
-from Connect.Verify import tela_registro, tela_login, validar_senha, criar_usuario, autenticar, verificar_senha, insert_register
+from Connect.Verify import tela_registro, tela_login, validar_senha, criar_usuario, autenticar, verificar_senha, insert_register, select_register
 import base64
 from supabase import create_client, Client
 
@@ -85,7 +85,8 @@ def main():
                                     st.write(Atributos)
                                     print("Atributos front ")
                                     print(Atributos)
-                                    Atributos.update({"Player":st.session_state['usuario']})
+                                    personagem = select_register("usuarios", columns=["id"])
+                                    Atributos.update({"Player":personagem})
                                     if insert_register(Atributos, "personagens"):
                                         st.rerun()
             else :
