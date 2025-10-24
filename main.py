@@ -94,7 +94,7 @@ def main():
             else :
                 from ExibirPersonagemCriado import exibir_personagem_criado
                 personagem = select_register("usuarios", None, columns=["id"])
-                exibir_personagem_criado(personagem)
+                exibir_personagem_criado(personagem[0])
 
 
 if __name__ == "__main__":
