@@ -4,8 +4,9 @@ import bcrypt
 import re
 from pymongo import MongoClient
 import random 
-from Connect.Verify import tela_registro, tela_login, validar_senha, criar_usuario, autenticar, verificar_senha
+from Connect.Verify import tela_registro, tela_login, validar_senha, criar_usuario, autenticar, verificar_senha, insert_register
 import base64
+from supabase import create_client, Client
 
 def font_css(font_path):
     with open(font_path, "rb") as f:
@@ -84,6 +85,8 @@ def main():
                                     st.write(Atributos)
                                     print("Atributos front ")
                                     print(Atributos)
+                                    Atributos.update({"Player":st.session_state['usuario']})
+                                    insert_register(Atributos, personagem)
                                     st.rerun()
             else :
                 from ExibirPersonagemCriado import exibir_personagem_criado
