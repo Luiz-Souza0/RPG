@@ -166,4 +166,40 @@ def alter_register(regid: int, updates: dict, table: str):
         st.error(f"Erro ao atualizar registro: {e}")
         return None
 
+def select_register(table: str, columns="*"):
+    """
+    Seleciona um registro existente no Supabase pelo ID.
+
+    Args:
+        table (str): Nome da tabela.
+        columns (list ou str): Lista de campos ou "*" para todos.
     
+    Returns:
+        dict ou None: Retorna o registro encontrado ou None se não existir.
+    """
+    try:
+        if not USAR_BANCO:
+            st.warning("Banco de dados desativado. Consulta não realizada.")
+            return None
+
+        # Se columns for lista, converte para string separada por vírgula
+        if isinstance(columns, list):
+            columns = ",".join(columns)
+
+        response = supabase.table(table).select(columns).execute()
+        
+        if response.data:
+            st.success(f"Registro selecionado com sucesso na tabela '{table}'.")
+            return response.data[0]  # retorna apenas o dicionário do registro
+        else:
+            st.warning(f"Nenhum registro encontrado na tabela '{table}'.")
+            return None
+
+    except Exception as e:
+        st.error(f"Erro ao consultar registro: {e}")
+        return None
+
+
+
+
+
