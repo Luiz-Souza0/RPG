@@ -48,6 +48,8 @@ def main():
             st.session_state['usuario'] = None
             st.rerun()
         escolha = "Área Protegida"
+        select_register("usuarios", {"usuario": st.session_state['usuario']}, columns=["id"])
+        
     if tipo == "Monstros":
         from TelaMonstros import Monstros
         Monstros()
@@ -85,7 +87,7 @@ def main():
                                     st.write(Atributos)
                                     print("Atributos front ")
                                     print(Atributos)
-                                    personagem = select_register("usuarios", columns=["id"])
+                                    personagem = select_register("usuarios", False, columns=["id"])
                                     Atributos.update({"Player":personagem})
                                     if insert_register(Atributos, "personagens"):
                                         st.rerun()
