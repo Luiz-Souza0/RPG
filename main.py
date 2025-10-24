@@ -93,7 +93,8 @@ def main():
                                         st.rerun()
             else :
                 from ExibirPersonagemCriado import exibir_personagem_criado
-                exibir_personagem_criado()
+                personagem = select_register("usuarios", None, columns=["id"])
+                exibir_personagem_criado(personagem)
 
 
 if __name__ == "__main__":
