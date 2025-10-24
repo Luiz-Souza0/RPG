@@ -113,3 +113,57 @@ def tela_registro():
                 st.error(mensagem)
         else:
             st.warning("Preencha todos os campos!")
+
+def insert_register(register: dict, table: str):
+    """
+    Insere um novo registro em uma tabela do Supabase.
+
+    Args:
+        register (dict): Dicionário com os dados a inserir. Ex: {"usuario": "joao", "senha": "1234"}
+        table (str): Nome da tabela.
+    """
+    try:
+        if not USAR_BANCO:
+            st.warning("Banco de dados desativado. Registro não inserido.")
+            return None
+
+        response = supabase.table(table).insert(register).execute()
+
+        if response.data:
+            st.success(f"Registro inserido com sucesso na tabela '{table}'.")
+            return response.data
+        else:
+            st.error(f"Falha ao inserir registro na tabela '{table}'.")
+            return None
+    except Exception as e:
+        st.error(f"Erro ao inserir registro: {e}")
+        return None
+
+
+def alter_register(regid: int, updates: dict, table: str):
+    """
+    Altera um registro existente no Supabase.
+
+    Args:
+        regid (int): ID do registro a ser alterado.
+        updates (dict): Dicionário com os campos e novos valores. Ex: {"senha": "nova_senha"}
+        table (str): Nome da tabela.
+    """
+    try:
+        if not USAR_BANCO:
+            st.warning("Banco de dados desativado. Alteração não salva.")
+            return None
+
+        response = supabase.table(table).update(updates).eq("id", regid).execute()
+
+        if response.data:
+            st.success(f"Registro {regid} atualizado com sucesso na tabela '{table}'.")
+            return response.data
+        else:
+            st.error(f"Nenhum registro encontrado com ID {regid} para atualizar.")
+            return None
+    except Exception as e:
+        st.error(f"Erro ao atualizar registro: {e}")
+        return None
+
+    
