@@ -3,14 +3,18 @@
 import streamlit as st
 from Inventario import exibir_inventario
 from Habilidades import exibir_Habilidades
+from Connect.Verify import select_register
 
-def exibir_personagem_criado():
-    atributos_salvos = st.session_state.get('Atributos')
+def exibir_personagem_criado(regid: int):
+        # Buscar o personagem salvo no banco pelo ID
+    atributos_salvos = select_register("personagens", filter={"id": regid}, columns="*")
 
     if not atributos_salvos:
-        st.warning("Nenhum personagem criado ainda.")
-        return
-
+        atributos_salvos = st.session_state.get('Atributos')
+        if not atributos_salvos:
+            st.warning("Nenhum personagem criado ainda.")
+            return
+    
     st.header(f"Seu Personagem: {atributos_salvos['Nome']}")
 
     linha1_col1, linha1_col2, linha1_col3 = st.columns(3)
