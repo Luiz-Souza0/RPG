@@ -8,7 +8,15 @@ from Connect.Verify import select_register
 def exibir_personagem_criado(regid: int):
         # Buscar o personagem salvo no banco pelo ID
     atributos_salvos = select_register("personagens", {"id": regid}, columns="*")[0]
-    st.session_state.atributos_salvos.habilidades = atributos_salvos["habilidades"]
+
+    if not atributos_salvos or len(atributos_salvos) == 0:
+        atributos_salvos = st.session_state.get('Atributos')
+    if not atributos_salvos:
+        st.warning("Nenhum personagem criado ainda.")
+        return
+
+
+    st.session_state["habilidades"] = atributos_salvos.get("habilidades", [])
     st.error("Personagem carregado do banco de dados.")
     if not atributos_salvos:
         atributos_salvos = st.session_state.get('Atributos')
