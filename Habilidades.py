@@ -1,4 +1,5 @@
 import streamlit as st
+import json
 from Connect.Verify import alter_register
 
 def exibir_Habilidades():
@@ -10,7 +11,17 @@ def exibir_Habilidades():
 
     st.subheader("Habilidades")
 
+    # Convertendo habilidades para lista Python
     habilidades = personagem.get("habilidades", [])
+    if isinstance(habilidades, str):
+        try:
+            habilidades = json.loads(habilidades)
+        except Exception:
+            habilidades = []
+
+    # Garante que seja lista (caso None)
+    if habilidades is None:
+        habilidades = []
 
     with st.expander("Habilidades"):
         with st.container(height=400, border=True):    
@@ -25,9 +36,9 @@ def exibir_Habilidades():
                             habilidades.pop(i)
                             personagem["habilidades"] = habilidades
                             st.session_state['Atributos'] = personagem
-                            # Atualiza no banco
                             if "id" in personagem:
-                                alter_register(personagem["id"], {"habilidades": habilidades}, "personagens")
+                                # Salva como JSON no banco
+                                alter_register(personagem["id"], {"habilidades": json.dumps(habilidades)}, "personagens")
                             st.rerun()
             else:
                 st.info("Habilidades vazio.")
@@ -42,9 +53,8 @@ def exibir_Habilidades():
                 habilidades.append(novo_item)
                 personagem["habilidades"] = habilidades
                 st.session_state['Atributos'] = personagem
-                # Atualiza no banco
                 if "id" in personagem:
-                    alter_register(personagem["id"], {"habilidades": habilidades}, "personagens")
+                    alter_register(personagem["id"], {"habilidades": json.dumps(habilidades)}, "personagens")
                 st.success(f"Item '{novo_item}' adicionado!")
                 st.rerun()
             else:
