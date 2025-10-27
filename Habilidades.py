@@ -1,6 +1,5 @@
-# habilidadesPersonagem.py
-
 import streamlit as st
+from Connect.Verify import alter_register
 
 def exibir_Habilidades():
     personagem = st.session_state.get("Atributos")
@@ -24,19 +23,28 @@ def exibir_Habilidades():
                     with col2:
                         if st.button(f"Remover", key=f"remover_Habilidade_{i}"):
                             habilidades.pop(i)
-                            st.session_state['Atributos']['habilidades'] = habilidades
+                            personagem["habilidades"] = habilidades
+                            st.session_state['Atributos'] = personagem
+                            # Atualiza no banco
+                            if "id" in personagem:
+                                alter_register(personagem["id"], {"habilidades": habilidades}, "personagens")
                             st.rerun()
             else:
                 st.info("Habilidades vazio.")
 
-        st.write(len(habilidades))
+        st.write(f"Total: {len(habilidades)}")
+
         novo_item = st.text_input("Novo item", key="nova_Skill")
         if st.button("Adicionar habilidade"):
             if len(habilidades) >= 10:
                 st.warning("Habilidades cheio! Remova um item antes de adicionar outro.")
             elif novo_item:
                 habilidades.append(novo_item)
-                st.session_state['Atributos']['habilidades'] = habilidades
+                personagem["habilidades"] = habilidades
+                st.session_state['Atributos'] = personagem
+                # Atualiza no banco
+                if "id" in personagem:
+                    alter_register(personagem["id"], {"habilidades": habilidades}, "personagens")
                 st.success(f"Item '{novo_item}' adicionado!")
                 st.rerun()
             else:
