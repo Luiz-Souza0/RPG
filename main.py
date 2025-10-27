@@ -67,8 +67,8 @@ def main():
         if st.session_state['autenticado']:
             st.title('Área Protegida - Criação de Personagem')
     
-
-        if select_register("personagens", filter={"id": columns=["id"]}, columns="*"):
+        idDoJogador = select_register("usuarios", {"usuario": st.session_state['usuario']}, columns=["id"])
+        if select_register("personagens", filter={"id": idDoJogador}, columns="*"):
             from ExibirPersonagemCriado import exibir_personagem_criado
             personagem = select_register("usuarios", None, columns=["id"])
             exibir_personagem_criado(personagem[0])
