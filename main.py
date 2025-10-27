@@ -33,6 +33,8 @@ def main():
         st.session_state['Atributos'] = None
     if 'usuario' not in st.session_state:
         st.session_state['usuario'] = None
+    if 'user_id' not in st.session_state:
+        st.session_state['user_id'] = None
         
     st.sidebar.title("Opções")
     
@@ -46,6 +48,7 @@ def main():
             st.session_state['autenticado'] = False
             st.session_state['Atributos'] = None
             st.session_state['usuario'] = None
+            st.session_state['user_id'] = None
             st.rerun()
         escolha = "Área Protegida"
         select_register("usuarios", {"usuario": st.session_state['usuario']}, columns=["id"])
@@ -59,6 +62,9 @@ def main():
     elif escolha == "Login":
         if not st.session_state['autenticado'] or st.session_state['autenticado'] == False:
             if tela_login():
+                dados = select_register("usuarios", {"usuario": st.session_state['usuario']}, columns=["id"])
+                if dados and len(dados) > 0:
+                    st.session_state['user_id'] = dados[0]['id']
                 st.session_state['autenticado'] = True
                 st.rerun()
     elif escolha == "Registrar":
@@ -66,12 +72,13 @@ def main():
     elif escolha == "Área Protegida":
         if st.session_state['autenticado']:
             st.title('Área Protegida - Criação de Personagem')
-    
-        idDoJogador = select_register("usuarios", {"usuario": st.session_state['usuario']}, columns=["id"])
-        if select_register("personagens", filter={"id": idDoJogador}, columns="*"):
+            user_id = st.session_state['user_id']
+            
+            personagem_existente = select_register("personagens", {"Player": user_id}, columns="*")
+
+        if personagem_existente and len(personagem_existente) > 0:
             from ExibirPersonagemCriado import exibir_personagem_criado
-            personagem = select_register("usuarios", None, columns=["id"])
-            exibir_personagem_criado(personagem[0])
+            exibir_personagem_criado(personagem_existente[0]["id"])
             
         elif st.session_state['autenticado']:
             if 'Atributos' not in st.session_state or st.session_state['Atributos'] == None:
@@ -89,12 +96,11 @@ def main():
                             if Atributos != None: 
                                 if (st.button("Salvar")):
                                     Atributos['Inventario'] = []
+                                    Atributos.update({"Player":user_id})
                                     st.session_state['Atributos'] = Atributos
                                     st.write(Atributos)
                                     print("Atributos front ")
                                     print(Atributos)
-                                    personagem = select_register("usuarios", None, columns=["id"])
-                                    Atributos.update({"Player":personagem})
                                     if insert_register(Atributos, "personagens"):
                                         st.rerun()
             else :
