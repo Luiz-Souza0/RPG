@@ -7,7 +7,7 @@ from Connect.Verify import select_register
 
 def exibir_personagem_criado(regid: int):
         # Buscar o personagem salvo no banco pelo ID
-    atributos_salvos = select_register("personagens", {"id": regid}, columns="*")
+    atributos_salvos = select_register("personagens", {"id": regid}, columns="*")[0]
 
     st.error("Personagem carregado do banco de dados.")
     if not atributos_salvos:
