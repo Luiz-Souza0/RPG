@@ -66,8 +66,14 @@ def main():
     elif escolha == "Área Protegida":
         if st.session_state['autenticado']:
             st.title('Área Protegida - Criação de Personagem')
+    
 
-        if st.session_state['autenticado']:
+        if select_register("personagens", filter={"id": columns=["id"]}, columns="*"):
+            from ExibirPersonagemCriado import exibir_personagem_criado
+            personagem = select_register("usuarios", None, columns=["id"])
+            exibir_personagem_criado(personagem[0])
+            
+        elif st.session_state['autenticado']:
             if 'Atributos' not in st.session_state or st.session_state['Atributos'] == None:
                 st.session_state['Atributos'] = None
                 
