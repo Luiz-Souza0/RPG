@@ -1,5 +1,6 @@
 import streamlit as st
 
 def seeAllPlayers():
-  atributos_salvos = select_register("personagens", None, columns="*")
+  atributos_salvos = select_register("personagens", filter: dict = None, columns="*")
   st.write( atributos_salvos)
+
