@@ -208,7 +208,40 @@ def select_register(table: str, filter: dict = None, columns="*"):
         st.error(f"Erro ao consultar registro: {e}")
         return None
 
+def delete_register(table: str, filter: dict):
+    """
+    Exclui registros do Supabase com base em filtros dinâmicos.
 
+    Args:
+        table (str): Nome da tabela.
+        filter (dict): Dicionário com filtros. Ex: {"id": 5} ou {"usuario": "admin"}.
 
+    Returns:
+        list ou None: Lista de registros excluídos (se o Supabase retornar) ou None se nada for excluído.
+    """
+    try:
+        if not USAR_BANCO:
+            st.warning("Banco de dados desativado. Exclusão não realizada.")
+            return None
 
+        query = supabase.table(table).delete()
+
+        # Aplica filtros (somente se tiverem valor válido)
+        if filter:
+            for key, value in filter.items():
+                if value is not False and value is not None:
+                    query = query.eq(key, value)
+
+        response = query.execute()
+
+        if response.data:
+            st.success(f"{len(response.data)} registro(s) excluído(s) da tabela '{table}'.")
+            return response.data
+        else:
+            st.warning(f"Nenhum registro encontrado na tabela '{table}' para exclusão.")
+            return None
+
+    except Exception as e:
+        st.error(f"Erro ao excluir registro: {e}")
+        return None
 
