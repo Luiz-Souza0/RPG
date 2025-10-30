@@ -35,6 +35,10 @@ def main():
         st.session_state['usuario'] = None
     if 'user_id' not in st.session_state:
         st.session_state['user_id'] = None
+    if 'role' not in st.session_state:
+        st.session_state['role'] = None
+    if 'menu' not in st.session_state:
+        st.session_state['menu'] = ["Login", "Registrar"]
 
     st.sidebar.title("Opções")
 
@@ -42,14 +46,18 @@ def main():
     # LOGIN / REGISTRO
     # ========================================
     if not st.session_state['autenticado']:
-        escolha = st.sidebar.radio("Escolha uma opção", ("Login", "Registrar"))
+        escolha = st.sidebar.radio("Escolha uma opção", st.session_state['menu'])
 
         if escolha == "Login":
             if tela_login():
-                dados = select_register("usuarios", {"usuario": st.session_state['usuario']}, columns=["id"])
+                dados = select_register("usuarios", {"usuario": st.session_state['usuario']}, columns=["id", "role"])
                 if dados and len(dados) > 0:
                     st.session_state['user_id'] = dados[0]['id']
+                    st.session_state['role'] = dados[0]['role']
                 st.session_state['autenticado'] = True
+                st.session_state['menu'] = ["Monstros", "Ficha", "Sala do Mestre"]
+                if st.session_state['role'] == "admin":
+                    st.session_state['menu'].append("admin")
                 st.rerun()
 
         elif escolha == "Registrar":
@@ -60,7 +68,8 @@ def main():
     # ÁREA PROTEGIDA
     # ========================================
     st.sidebar.write(f"Logado como: {st.session_state['usuario']}")
-    tipo = st.sidebar.radio("O que deseja ver?", ("Monstros", "Ficha", "Sala do Mestre"))
+    st.sidebar.write(f"Função: {st.session_state['role']}")
+    tipo = st.sidebar.radio("O que deseja ver?", st.session_state['menu'])
 
     if st.sidebar.button("Sair"):
         st.session_state['autenticado'] = False

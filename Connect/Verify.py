@@ -8,7 +8,7 @@ import re
 # ==============================================
 SUPABASE_URL = "https://rybuyxuxivizlfpxesoe.supabase.co"
 SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ5YnV5eHV4aXZpemxmcHhlc29lIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEzMjc0OTAsImV4cCI6MjA3NjkwMzQ5MH0.dYsT3jwJ7xvKNBAOGmRzxibAGzz776amwgfm-m4TSPA"
-USAR_BANCO = True  # ativar Supabase
+USAR_BANCO = True
 
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY) if USAR_BANCO else None
 
@@ -41,16 +41,15 @@ def autenticar(usuario, senha):
     return False
 
 
-def criar_usuario(usuario, senha):
+def criar_usuario(usuario, senha, role="player"):
     senha_criptografada = bcrypt.hashpw(senha.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
 
     if USAR_BANCO:
-        # Verifica se já existe
         ja_existe = supabase.table("usuarios").select("usuario").eq("usuario", usuario).execute()
         if ja_existe.data:
             st.error("Usuário já existe. Escolha outro nome.")
         else:
-            supabase.table("usuarios").insert({"usuario": usuario, "senha": senha_criptografada}).execute()
+            supabase.table("usuarios").insert({"usuario": usuario, "senha": senha_criptografada, "role" : role}).execute()
             st.success(f"Usuário {usuario} criado com sucesso no Supabase!")
     else:
         st.success(f"Usuário {usuario} criado com sucesso (mas não salvo no banco).")
@@ -96,17 +95,20 @@ def tela_login():
 
 def tela_registro():
     st.title('Registro de Usuário')
-
+    cargo = ["player", "master"]
     novo_usuario = st.text_input('Nome de usuário')
     nova_senha = st.text_input('Senha', type='password')
     confirmar_senha = st.text_input('Confirmar Senha', type='password')
+    if(st.text_input("senha de mestre da sala") == "RpgFichaLuAnd123"):
+        cargo.append("admin")
+    role = st.selectbox('Selecione o papel do usuário', cargo)
 
     if st.button('Criar Conta'):
         if novo_usuario and nova_senha and confirmar_senha:
             senha_valida, mensagem = validar_senha(nova_senha)
             if senha_valida:
                 if nova_senha == confirmar_senha:
-                    criar_usuario(novo_usuario, nova_senha)
+                    criar_usuario(novo_usuario, nova_senha, role=role)
                 else:
                     st.error("As senhas não coincidem!")
             else:
