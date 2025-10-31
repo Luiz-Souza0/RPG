@@ -91,7 +91,7 @@ def main():
 
     elif tipo == "admin":
         st.title("Sala do Administrador")
-        if st.input_text("Qual a senha? ") == "777":
+        if st.text_input("Qual a senha? ") == "777":
             st.write("Entrou!! ")
 
     elif tipo == "Ficha":
