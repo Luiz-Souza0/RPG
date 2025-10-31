@@ -89,6 +89,11 @@ def main():
         from Master import seeAllPlayers
         seeAllPlayers()
 
+    elif tipo == "admin":
+        st.title("Sala do Administrador")
+        if st.input_text("Qual a senha? ") == "777":
+            st.write("Entrou!! ")
+
     elif tipo == "Ficha":
         if not st.session_state['user_id']:
             st.error("Erro: ID do jogador não encontrado.")
