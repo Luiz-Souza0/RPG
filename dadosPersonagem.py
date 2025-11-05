@@ -34,7 +34,7 @@ def Raca(Atributos):
             Atributos[EscolhaAtributo] += 2 
             print(EscolhaAtributo)
             return Classes(Atributos)
-    if(Atributos["Raca"] == "Anao"):
+    if(Atributos["Raca"] == "Anão"):
         Atributos["Const"] += 2
         # Atributos["3"] += 2 Rever
         return Classes(Atributos)
