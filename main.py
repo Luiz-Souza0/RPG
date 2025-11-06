@@ -92,7 +92,8 @@ def main():
     elif tipo == "admin":
         st.title("Sala do Administrador")
         if st.text_input("Qual a senha? ") == "777":
-            st.write("Entrou!! ")
+            import tela.admin as admin
+            admin.admin_panel()
 
     elif tipo == "Ficha":
         if not st.session_state['user_id']:
