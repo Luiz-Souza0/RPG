@@ -45,30 +45,29 @@ def admin_panel():
     # FILTROS
     # ===========================
     st.subheader("Filtrar Habilidades")
-    filtro_nivel = st.slider("Nível Máximo", 0, 10, 10)
-    filtro_classe = st.text_input("Filtrar por Classe (deixe vazio para todas)")
+    filtro_nivel = st.number_input("Nível exato (deixe vazio para todos)", min_value=0, max_value=10, step=1, value=None)
+    
+    # Criar lista de classes únicas a partir das habilidades existentes
+    habilidades = select_register("habilidades") or []
+    classes_existentes = sorted({hab.get("classe") for hab in habilidades if hab.get("classe")})
 
-    filtros = {}
-    if filtro_nivel is not None:
-        filtros["nivel"] = filtro_nivel
-    if filtro_classe:
-        filtros["classe"] = filtro_classe
+    filtro_classe = st.multiselect("Filtrar por Classe", options=classes_existentes)
 
     # ===========================
     # LISTAGEM E EDIÇÃO
     # ===========================
     st.subheader("Habilidades Existentes")
-    habilidades = select_register("habilidades") or []
 
-    # Aplicar filtros manualmente (Supabase não filtra "menor ou igual" no select_register)
+    # Aplicar filtros manualmente
     habilidades_filtradas = [
         hab for hab in habilidades
-        if (hab['nivel'] <= filtro_nivel) and (not filtro_classe or (hab.get('classe') == filtro_classe))
+        if (filtro_nivel is None or hab['nivel'] == filtro_nivel)
+        and (not filtro_classe or hab.get('classe') in filtro_classe)
     ]
 
     if not habilidades_filtradas:
         st.info("Nenhuma habilidade encontrada com os filtros aplicados.")
-    
+
     for hab in habilidades_filtradas:
         with st.expander(f"{hab['nome_da_magia']} (Nível {hab['nivel']})"):
             st.text_area("Descrição", hab['descricao'], key=f"desc_{hab['id']}")
