@@ -1,5 +1,6 @@
 import streamlit as st
-from Connect.Verify import insert_register, select_register, delete_register, update_register  # vou supor que update_register existe
+from Connect.Verify import insert_register, select_register, delete_register, alter_register  # vou supor que update_register existe
+
 
 def admin_panel():
     st.title("Painel Administrativo - Gerenciamento de Habilidades")
