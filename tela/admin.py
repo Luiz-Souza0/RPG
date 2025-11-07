@@ -1,3 +1,7 @@
+import streamlit as st
+from Connect.Verify import insert_register, select_register, delete_register, alter_register  # vou supor que update_register existe
+
+
 def admin_panel():
     st.title("Painel Administrativo")
     st.write("Bem-vindo ao painel administrativo. Aqui você pode gerenciar usuários, visualizar estatísticas e configurar o sistema.")
