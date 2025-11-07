@@ -55,7 +55,7 @@ def exibir_habilidades():
                     }
 
                     # ✅ Inserção como lista de dicionários
-                    resultado = insert_register([dados], "habilidades")  # <- aqui corrigido
+                    resultado = insert_register(dados, "habilidades")  # <- aqui corrigido
 
                     if resultado:
                         st.success(f"✅ Habilidade '{nome}' adicionada com sucesso!")
