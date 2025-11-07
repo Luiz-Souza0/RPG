@@ -35,9 +35,7 @@ def exibir_habilidades():
             classe = st.selectbox("Classe", ["Bárbaro", "Mago", "Guerreiro", "Arqueiro", "Clérigo"])
             descricao = st.text_area("Descrição da Magia / Efeito")
 
-            submit = st.form_submit_button("Salvar Habilidade")
-
-            if submit:
+            if st.button("Salvar Habilidade"):
                 if nome and descricao:
                     dados = {
                         "nome_da_magia": nome,
