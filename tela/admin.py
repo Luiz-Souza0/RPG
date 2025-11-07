@@ -18,7 +18,8 @@ def exibir_habilidades():
     with st.expander("➕ Adicionar Nova Habilidade"):
         st.subheader("Cadastrar Habilidade")
 
-        with st.form("form_add_habilidade", clear_on_submit=True):
+        # clear_on_submit = False → mantém os valores preenchidos
+        with st.form("form_add_habilidade", clear_on_submit=False):
             nome = st.text_input("Nome da Magia / Habilidade")
             nivel = st.number_input("Nível", min_value=0, max_value=10, step=1)
             
@@ -26,8 +27,10 @@ def exibir_habilidades():
             with col1:
                 tempo_de_conjuracao = st.number_input("Tempo de Conjuração", min_value=0, step=1)
             with col2:
-                tipo_tempo_de_conjuracao = st.selectbox("Tipo do Tempo de Conjuração", 
-                                                        ["Ação", "Ação bônus", "Reação", "Minuto(s)", "Hora(s)"])
+                tipo_tempo_de_conjuracao = st.selectbox(
+                    "Tipo do Tempo de Conjuração", 
+                    ["Ação", "Ação bônus", "Reação", "Minuto(s)", "Hora(s)"]
+                )
 
             alcance = st.number_input("Alcance (em metros)", min_value=0, step=1)
             duracao = st.text_input("Duração", placeholder="Ex: 1 minuto, Instantânea, Concentration, etc.")
@@ -35,7 +38,9 @@ def exibir_habilidades():
             classe = st.selectbox("Classe", ["Bárbaro", "Mago", "Guerreiro", "Arqueiro", "Clérigo"])
             descricao = st.text_area("Descrição da Magia / Efeito")
 
-            if st.button("Salvar Habilidade"):
+            submit = st.form_submit_button("Salvar Habilidade")
+
+            if submit:
                 if nome and descricao:
                     dados = {
                         "nome_da_magia": nome,
@@ -51,6 +56,7 @@ def exibir_habilidades():
 
                     if insert_register(dados, "habilidades"):
                         st.success(f"✅ Habilidade '{nome}' adicionada com sucesso!")
+                        # st.rerun() removido — mantém o formulário preenchido
                     else:
                         st.error("❌ Erro ao inserir habilidade no banco de dados.")
                 else:
