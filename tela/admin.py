@@ -42,29 +42,29 @@ def exibir_habilidades():
         # =========================
         # FILTRO DE HABILIDADES
         # =========================
-        st.subheader("Listar Habilidades")
-    
-        col1, col2 = st.columns(2)
-        with col1:
-            filtro_nivel = st.selectbox("Filtrar por Nível", list(range(0, 11)), index=0)
-        with col2:
-            filtro_classe = st.selectbox("Filtrar por Classe", ["Todas", "Bárbaro", "Mago", "Guerreiro", "Arqueiro", "Clérigo"])
-    
-        # Monta filtro dinâmico
-        filtros = {}
-        if filtro_nivel != 0:
-            filtros["nivel"] = filtro_nivel
-        if filtro_classe != "Todas":
-            filtros["classe"] = filtro_classe
-    
-        habilidades = select_register("habilidades", filtros if filtros else None, columns="*")
-    
-        # =========================
-        # EXIBIÇÃO DAS HABILIDADES
-        # =========================
-        if not habilidades or len(habilidades) == 0:
-            st.info("Nenhuma habilidade encontrada para esse filtro.")
-        else:
-            for hab in habilidades:
-                with st.expander(f"🧙‍♂️ {hab['nome']} (Nível {hab['nivel']}) - {hab['classe']}"):
-                    st.write(f"**Descrição:** {hab['descricao']}")
+    st.subheader("Listar Habilidades")
+
+    col1, col2 = st.columns(2)
+    with col1:
+        filtro_nivel = st.selectbox("Filtrar por Nível", list(range(0, 11)), index=0)
+    with col2:
+        filtro_classe = st.selectbox("Filtrar por Classe", ["Todas", "Bárbaro", "Mago", "Guerreiro", "Arqueiro", "Clérigo"])
+
+    # Monta filtro dinâmico
+    filtros = {}
+    if filtro_nivel != 0:
+        filtros["nivel"] = filtro_nivel
+    if filtro_classe != "Todas":
+        filtros["classe"] = filtro_classe
+
+    habilidades = select_register("habilidades", filtros if filtros else None, columns="*")
+
+    # =========================
+    # EXIBIÇÃO DAS HABILIDADES
+    # =========================
+    if not habilidades or len(habilidades) == 0:
+        st.info("Nenhuma habilidade encontrada para esse filtro.")
+    else:
+        for hab in habilidades:
+            with st.expander(f"🧙‍♂️ {hab['nome']} (Nível {hab['nivel']}) - {hab['classe']}"):
+                st.write(f"**Descrição:** {hab['descricao']}")
