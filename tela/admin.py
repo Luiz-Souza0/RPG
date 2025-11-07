@@ -14,29 +14,30 @@ def exibir_habilidades():
     # =========================
     # CADASTRO DE NOVA HABILIDADE
     # =========================
-    st.subheader("Adicionar Nova Habilidade")
 
-    with st.form("form_add_habilidade", clear_on_submit=True):
-        nome = st.text_input("Nome da Habilidade")
-        descricao = st.text_area("Descrição")
-        nivel = st.number_input("Nível da Habilidade", min_value=0, max_value=10, step=1)
-        classe = st.selectbox("Classe", ["Bárbaro", "Mago", "Guerreiro", "Arqueiro", "Clérigo"])
-        submit = st.form_submit_button("Salvar Habilidade")
-
-        if submit:
-            if nome and descricao:
-                dados = {
-                    "nome": nome,
-                    "descricao": descricao,
-                    "nivel": nivel,
-                    "classe": classe
-                }
-                if insert_register(dados, "habilidades"):
-                    st.success(f"Habilidade '{nome}' adicionada com sucesso!")
+    with st.expander("Adicionar Habilidade"):
+        st.subheader("Adicionar Nova Habilidade")
+        with st.form("form_add_habilidade", clear_on_submit=True):
+            nome = st.text_input("Nome da Habilidade")
+            descricao = st.text_area("Descrição")
+            nivel = st.number_input("Nível da Habilidade", min_value=0, max_value=10, step=1)
+            classe = st.selectbox("Classe", ["Bárbaro", "Mago", "Guerreiro", "Arqueiro", "Clérigo"])
+            submit = st.form_submit_button("Salvar Habilidade")
+    
+            if submit:
+                if nome and descricao:
+                    dados = {
+                        "nome": nome,
+                        "descricao": descricao,
+                        "nivel": nivel,
+                        "classe": classe
+                    }
+                    if insert_register(dados, "habilidades"):
+                        st.success(f"Habilidade '{nome}' adicionada com sucesso!")
+                    else:
+                        st.error("Erro ao inserir habilidade.")
                 else:
-                    st.error("Erro ao inserir habilidade.")
-            else:
-                st.warning("Preencha todos os campos antes de salvar.")
+                    st.warning("Preencha todos os campos antes de salvar.")
 
         # =========================
         # FILTRO DE HABILIDADES
