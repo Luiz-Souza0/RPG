@@ -8,7 +8,6 @@ def admin_panel():
     if st.button("Gerenciar Habilidades"):
         exibir_habilidades()
 
-
 def exibir_habilidades():
     st.title("Gerenciador de Habilidades")
 
@@ -18,17 +17,16 @@ def exibir_habilidades():
     with st.expander("➕ Adicionar Nova Habilidade"):
         st.subheader("Cadastrar Habilidade")
 
-        # clear_on_submit = False → mantém os valores preenchidos
         with st.form("form_add_habilidade", clear_on_submit=False):
             nome = st.text_input("Nome da Magia / Habilidade")
             nivel = st.number_input("Nível", min_value=0, max_value=10, step=1)
-            
+
             col1, col2 = st.columns(2)
             with col1:
                 tempo_de_conjuracao = st.number_input("Tempo de Conjuração", min_value=0, step=1)
             with col2:
                 tipo_tempo_de_conjuracao = st.selectbox(
-                    "Tipo do Tempo de Conjuração", 
+                    "Tipo do Tempo de Conjuração",
                     ["Ação", "Ação bônus", "Reação", "Minuto(s)", "Hora(s)"]
                 )
 
@@ -41,7 +39,9 @@ def exibir_habilidades():
             submit = st.form_submit_button("Salvar Habilidade")
 
             if submit:
-                if nome and descricao:
+                if not nome or not descricao:
+                    st.warning("⚠️ Preencha ao menos o nome e a descrição antes de salvar.")
+                else:
                     dados = {
                         "nome_da_magia": nome,
                         "nivel": nivel,
@@ -54,13 +54,13 @@ def exibir_habilidades():
                         "descricao": descricao
                     }
 
-                    if insert_register(dados, "habilidades"):
+                    # ✅ Inserção como lista de dicionários
+                    resultado = insert_register([dados], "habilidades")  # <- aqui corrigido
+
+                    if resultado:
                         st.success(f"✅ Habilidade '{nome}' adicionada com sucesso!")
-                        # st.rerun() removido — mantém o formulário preenchido
                     else:
                         st.error("❌ Erro ao inserir habilidade no banco de dados.")
-                else:
-                    st.warning("⚠️ Preencha ao menos o nome e a descrição antes de salvar.")
 
     # =========================
     # FILTRO DE HABILIDADES
@@ -84,7 +84,7 @@ def exibir_habilidades():
     # =========================
     # EXIBIÇÃO DAS HABILIDADES
     # =========================
-    if not habilidades or len(habilidades) == 0:
+    if not habilidades:
         st.info("Nenhuma habilidade encontrada com esses filtros.")
     else:
         for hab in habilidades:
