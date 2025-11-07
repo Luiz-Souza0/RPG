@@ -1,98 +1,44 @@
 import streamlit as st
-from Connect.Verify import insert_register, select_register
+from Connect.Verify import insert_register
 
 def admin_panel():
-    st.title("Painel Administrativo")
-    st.write("Bem-vindo ao painel administrativo. Aqui você pode gerenciar usuários, visualizar estatísticas e configurar o sistema.")
-    
-    if st.button("Gerenciar Habilidades"):
-        exibir_habilidades()
+    st.title("Painel Administrativo - Teste Inserção")
 
-def exibir_habilidades():
-    st.title("Gerenciador de Habilidades")
+    with st.form("form_add_habilidade_minima", clear_on_submit=True):
+        nome = st.text_input("Nome da Magia / Habilidade")
+        nivel = st.number_input("Nível", min_value=0, max_value=10, step=1)
+        tempo_de_conjuracao = st.number_input("Tempo de Conjuração", min_value=0, step=1)
+        tipo_tempo_de_conjuracao = st.selectbox(
+            "Tipo do Tempo de Conjuração",
+            ["Ação", "Ação bônus", "Reação", "Minuto(s)", "Hora(s)"]
+        )
+        alcance = st.number_input("Alcance (em metros)", min_value=0, step=1)
+        descricao = st.text_area("Descrição da Magia / Efeito")
 
-    # =========================
-    # CADASTRO DE NOVA HABILIDADE
-    # =========================
-    with st.expander("➕ Adicionar Nova Habilidade"):
-        st.subheader("Cadastrar Habilidade")
+        submit = st.form_submit_button("Salvar Habilidade")
 
-        with st.form("form_add_habilidade", clear_on_submit=False):
-            nome = st.text_input("Nome da Magia / Habilidade")
-            nivel = st.number_input("Nível", min_value=0, max_value=10, step=1)
+        if submit:
+            if not nome or not descricao:
+                st.warning("⚠️ Preencha ao menos o nome e a descrição antes de salvar.")
+            else:
+                dados = {
+                    "nome_da_magia": nome,
+                    "nivel": nivel,
+                    "tempo_de_conjuracao": tempo_de_conjuracao,
+                    "tipo_tempo_de_conjuracao": tipo_tempo_de_conjuracao,
+                    "alcance": alcance,
+                    "duracao": None,
+                    "componentes": None,
+                    "classe": None,
+                    "descricao": descricao
+                }
 
-            col1, col2 = st.columns(2)
-            with col1:
-                tempo_de_conjuracao = st.number_input("Tempo de Conjuração", min_value=0, step=1)
-            with col2:
-                tipo_tempo_de_conjuracao = st.selectbox(
-                    "Tipo do Tempo de Conjuração",
-                    ["Ação", "Ação bônus", "Reação", "Minuto(s)", "Hora(s)"]
-                )
+                resultado = insert_register(dados, "habilidades")
 
-            alcance = st.number_input("Alcance (em metros)", min_value=0, step=1)
-            duracao = st.text_input("Duração", placeholder="Ex: 1 minuto, Instantânea, Concentration, etc.")
-            componentes = st.text_input("Componentes", placeholder="Ex: V, S, M (um cristal de quartzo)")
-            classe = st.selectbox("Classe", ["Bárbaro", "Mago", "Guerreiro", "Arqueiro", "Clérigo"])
-            descricao = st.text_area("Descrição da Magia / Efeito")
-
-            submit = st.form_submit_button("Salvar Habilidade")
-
-            if submit:
-                if not nome or not descricao:
-                    st.warning("⚠️ Preencha ao menos o nome e a descrição antes de salvar.")
+                if resultado:
+                    st.success(f"✅ Habilidade '{nome}' adicionada com sucesso!")
                 else:
-                    dados = {
-                        "nome_da_magia": nome,
-                        "nivel": nivel,
-                        "tempo_de_conjuracao": tempo_de_conjuracao,
-                        "tipo_tempo_de_conjuracao": tipo_tempo_de_conjuracao,
-                        "alcance": alcance,
-                        "duracao": duracao,
-                        "componentes": componentes,
-                        "classe": classe,
-                        "descricao": descricao
-                    }
+                    st.error("❌ Erro ao inserir habilidade no banco de dados.")
 
-                    # ✅ Inserção como lista de dicionários
-                    resultado = insert_register(dados, "habilidades")  # <- aqui corrigido
-
-                    if resultado:
-                        st.success(f"✅ Habilidade '{nome}' adicionada com sucesso!")
-                    else:
-                        st.error("❌ Erro ao inserir habilidade no banco de dados.")
-
-    # =========================
-    # FILTRO DE HABILIDADES
-    # =========================
-    st.subheader("🔍 Listar Habilidades")
-
-    col1, col2 = st.columns(2)
-    with col1:
-        filtro_nivel = st.selectbox("Filtrar por Nível", ["Todos"] + [str(i) for i in range(0, 11)])
-    with col2:
-        filtro_classe = st.selectbox("Filtrar por Classe", ["Todas", "Bárbaro", "Mago", "Guerreiro", "Arqueiro", "Clérigo"])
-
-    filtros = {}
-    if filtro_nivel != "Todos":
-        filtros["nivel"] = int(filtro_nivel)
-    if filtro_classe != "Todas":
-        filtros["classe"] = filtro_classe
-
-    habilidades = select_register("habilidades", filtros if filtros else None, columns="*")
-
-    # =========================
-    # EXIBIÇÃO DAS HABILIDADES
-    # =========================
-    if not habilidades:
-        st.info("Nenhuma habilidade encontrada com esses filtros.")
-    else:
-        for hab in habilidades:
-            with st.expander(f"🧙 {hab['nome_da_magia']} (Nível {hab['nivel']}) - {hab['classe']}"):
-                st.markdown(f"""
-                **Descrição:** {hab['descricao']}  
-                **Tempo de Conjuração:** {hab['tempo_de_conjuracao']} {hab['tipo_tempo_de_conjuracao']}  
-                **Alcance:** {hab['alcance']} m  
-                **Duração:** {hab['duracao'] or "—"}  
-                **Componentes:** {hab['componentes'] or "—"}  
-                """)
+if __name__ == "__main__":
+    admin_panel()
